@@ -130,6 +130,38 @@ function construirSala(cx, lista, nombre) {
   pared(LARGO, ANCHO / 2, 0, -Math.PI / 2);
   var luz = new THREE.PointLight(0xffe2b0, 0.9, 40); luz.position.set(cx, 3.6, 0); scene.add(luz);
 
+  // vigas de madera en el techo
+  var matViga = new THREE.MeshLambertMaterial({ color: 0x5a3d22 });
+  for (var v = -7; v <= 7; v += 3.5) {
+    var viga = new THREE.Mesh(new THREE.BoxGeometry(ANCHO, 0.25, 0.3), matViga);
+    viga.position.set(cx, ALTO - 0.12, v); scene.add(viga);
+  }
+  // focos colgantes de luz cálida
+  var matFoco = new THREE.MeshBasicMaterial({ color: 0xffe2b0 });
+  for (var fx = -6; fx <= 6; fx += 6) {
+    for (var fz = -5; fz <= 5; fz += 5) {
+      var cable = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.7, 6), matViga);
+      cable.position.set(cx + fx, ALTO - 0.4, fz); scene.add(cable);
+      var bulbo = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 12), matFoco);
+      bulbo.position.set(cx + fx, ALTO - 0.8, fz); scene.add(bulbo);
+    }
+  }
+  // alfombra bordó larga en el centro
+  var alfombra = new THREE.Mesh(new THREE.PlaneGeometry(4, LARGO - 3), new THREE.MeshLambertMaterial({ color: 0x8a1050 }));
+  alfombra.rotation.x = -Math.PI / 2; alfombra.position.set(cx, 0.01, 0); scene.add(alfombra);
+  var bordeAlf = new THREE.Mesh(new THREE.PlaneGeometry(4.4, LARGO - 2.6), new THREE.MeshLambertMaterial({ color: 0xff6600 }));
+  bordeAlf.rotation.x = -Math.PI / 2; bordeAlf.position.set(cx, 0.005, 0); scene.add(bordeAlf);
+  // bancos de madera
+  var matBanco = new THREE.MeshLambertMaterial({ color: 0x6b4a2b });
+  [-3, 3].forEach(function (bz) {
+    var asiento = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.12, 0.6), matBanco);
+    asiento.position.set(cx + 3.2, 0.5, bz); scene.add(asiento);
+    [-0.9, 0.9].forEach(function (px) {
+      var pata = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 0.5), matBanco);
+      pata.position.set(cx + 3.2 + px, 0.25, bz); scene.add(pata);
+    });
+  });
+
   // letrero de la sala
   var letrero = new THREE.Mesh(new THREE.PlaneGeometry(4, 1.1), new THREE.MeshBasicMaterial({ map: textoTextura(nombre, '#1a3f49', '#ff6600') }));
   letrero.position.set(cx, 3.3, LARGO / 2 - 0.05); letrero.rotation.y = Math.PI; scene.add(letrero);
