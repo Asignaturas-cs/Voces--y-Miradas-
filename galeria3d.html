@@ -8,6 +8,7 @@
   html, body { margin: 0; height: 100%; overflow: hidden; background: #111; font-family: Georgia, serif; touch-action: none; }
   #escena { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: block; }
   #titulo { position: fixed; top: 12px; left: 0; right: 0; text-align: center; color: #fff; text-shadow: 0 2px 6px #000; pointer-events: none; font-size: 1.1em; }
+  #sala { position: fixed; top: 40px; left: 0; right: 0; text-align: center; color: #ff6600; text-shadow: 0 2px 6px #000; pointer-events: none; font-size: 1.4em; font-weight: bold; }
   #ayuda { position: fixed; bottom: 12px; right: 12px; color: #ddd; font-size: 0.8em; text-shadow: 0 1px 3px #000; pointer-events: none; text-align: right; max-width: 45%; }
   #joy { position: fixed; bottom: 30px; left: 30px; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); display: none; }
   #palanca { position: absolute; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,0.55); left: 32px; top: 32px; }
@@ -20,7 +21,8 @@
 <body>
 <canvas id="escena"></canvas>
 <div id="titulo">Voces y Miradas de la Investigación</div>
-<div id="ayuda">Flechas o WASD para caminar. Arrastrá para mirar. Tocá un cuadro para abrirlo.</div>
+<div id="sala"></div>
+<div id="ayuda">Flechas o WASD para caminar. Arrastrá para mirar. Tocá un cuadro para abrirlo. Caminá hacia la puerta para cambiar de sala.</div>
 <div id="joy"><div id="palanca"></div></div>
 
 <div id="visor">
@@ -31,14 +33,46 @@
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
-// ===== CUADROS: acá se cambian los datos (CAMBIAR) =====
-var CUADROS = [
+// ===== SALA 2025: 15 marcos (ANIO2025) =====
+var ANIO2025 = [
   { imagen: 'portada1.jpg', enlace: 'https://drive.google.com/file/d/1uEI8VsdX3wGaZz2adauKJJzVH3ecvuHr/preview',
     titulo: 'Relación entre el uso de pantallas y el desarrollo del lenguaje en niños de 1 a 3 años',
     autor: 'Juan Pérez · Comunicación Social · Año 2025' },
   { imagen: 'portada2.jpg', enlace: 'https://drive.google.com/file/d/1c9DHONaWDjxWSB9y-pElyuGZXTnT3jbz/preview',
     titulo: 'Sin nombre',
-    autor: 'María Pérez · Fonoaudiología · Año 2025' }
+    autor: 'María Pérez · Fonoaudiología · Año 2025' },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true }
+];
+
+// ===== SALA 2026: 15 marcos (ANIO2026) =====
+var ANIO2026 = [
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true },
+  { vacio: true }
 ];
 
 // ===== ESCENA =====
@@ -48,11 +82,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0x14323a);
 var camera = new THREE.PerspectiveCamera(70, 1, 0.1, 100);
-camera.position.set(0, 1.6, 4);
+camera.position.set(0, 1.6, 6);
 
-var ANCHO = 14, LARGO = 14, ALTO = 4;
+var ANCHO = 20, LARGO = 16, ALTO = 4;
+var SEP = 24; // separación entre salas en el eje X
 
-// piso de madera (textura dibujada)
 function texturaPiso() {
   var c = document.createElement('canvas'); c.width = 256; c.height = 256;
   var g = c.getContext('2d');
@@ -61,47 +95,79 @@ function texturaPiso() {
     g.fillRect(0, i * 32, 256, 32);
     g.fillStyle = 'rgba(0,0,0,0.25)'; g.fillRect(0, i * 32, 256, 2);
   }
-  var t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(5, 5); return t;
+  var t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(6, 5); return t;
 }
-var piso = new THREE.Mesh(new THREE.PlaneGeometry(ANCHO, LARGO), new THREE.MeshLambertMaterial({ map: texturaPiso() }));
-piso.rotation.x = -Math.PI / 2; scene.add(piso);
-
-// techo
-var techo = new THREE.Mesh(new THREE.PlaneGeometry(ANCHO, LARGO), new THREE.MeshLambertMaterial({ color: 0xf2efe8 }));
-techo.rotation.x = Math.PI / 2; techo.position.y = ALTO; scene.add(techo);
-
-// paredes azul petróleo
+var matPiso = new THREE.MeshLambertMaterial({ map: texturaPiso() });
+var matTecho = new THREE.MeshLambertMaterial({ color: 0xf2efe8 });
 var matPared = new THREE.MeshLambertMaterial({ color: 0x2a6270, side: THREE.DoubleSide });
-function pared(w, x, z, ry) {
-  var m = new THREE.Mesh(new THREE.PlaneGeometry(w, ALTO), matPared);
-  m.position.set(x, ALTO / 2, z); m.rotation.y = ry; scene.add(m); return m;
+var marcoMat = new THREE.MeshLambertMaterial({ color: 0x6b4a2b });
+var vacioMat = new THREE.MeshLambertMaterial({ color: 0xe9e4d8 });
+
+function textoTextura(texto, fondo, color) {
+  var c = document.createElement('canvas'); c.width = 256; c.height = 180;
+  var g = c.getContext('2d');
+  g.fillStyle = fondo; g.fillRect(0, 0, 256, 180);
+  g.fillStyle = color; g.font = 'bold 28px Georgia'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(texto, 128, 90);
+  return new THREE.CanvasTexture(c);
 }
-pared(ANCHO, 0, -LARGO / 2, 0);
-pared(ANCHO, 0, LARGO / 2, Math.PI);
-pared(LARGO, -ANCHO / 2, 0, Math.PI / 2);
-pared(LARGO, ANCHO / 2, 0, -Math.PI / 2);
 
-// luces
-scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-var luzCentral = new THREE.PointLight(0xffe2b0, 0.9, 30); luzCentral.position.set(0, 3.6, 0); scene.add(luzCentral);
-
-// cuadros colgados en la pared del fondo
 var clicables = [];
 var loader = new THREE.TextureLoader();
-var marcoMat = new THREE.MeshLambertMaterial({ color: 0x6b4a2b });
-CUADROS.forEach(function (d, i) {
-  var x = (i - (CUADROS.length - 1) / 2) * 4.2;
-  var grupo = new THREE.Group();
-  var marco = new THREE.Mesh(new THREE.BoxGeometry(3.1, 2.3, 0.12), marcoMat);
-  grupo.add(marco);
-  var tex = loader.load(d.imagen);
-  var lienzo = new THREE.Mesh(new THREE.PlaneGeometry(2.8, 2.0), new THREE.MeshBasicMaterial({ map: tex }));
-  lienzo.position.z = 0.07; lienzo.userData = d; grupo.add(lienzo); clicables.push(lienzo);
-  grupo.position.set(x, 2.0, -LARGO / 2 + 0.08);
-  scene.add(grupo);
-  var foco = new THREE.SpotLight(0xffe2b0, 1.2, 8, 0.6, 0.5);
-  foco.position.set(x, 3.8, -LARGO / 2 + 2); foco.target.position.set(x, 2.0, -LARGO / 2); scene.add(foco); scene.add(foco.target);
-});
+
+function construirSala(cx, lista, nombre) {
+  var piso = new THREE.Mesh(new THREE.PlaneGeometry(ANCHO, LARGO), matPiso);
+  piso.rotation.x = -Math.PI / 2; piso.position.x = cx; scene.add(piso);
+  var techo = new THREE.Mesh(new THREE.PlaneGeometry(ANCHO, LARGO), matTecho);
+  techo.rotation.x = Math.PI / 2; techo.position.set(cx, ALTO, 0); scene.add(techo);
+  function pared(w, x, z, ry) {
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, ALTO), matPared);
+    m.position.set(cx + x, ALTO / 2, z); m.rotation.y = ry; scene.add(m);
+  }
+  pared(ANCHO, 0, -LARGO / 2, 0);
+  pared(ANCHO, 0, LARGO / 2, Math.PI);
+  pared(LARGO, -ANCHO / 2, 0, Math.PI / 2);
+  pared(LARGO, ANCHO / 2, 0, -Math.PI / 2);
+  var luz = new THREE.PointLight(0xffe2b0, 0.9, 40); luz.position.set(cx, 3.6, 0); scene.add(luz);
+
+  // letrero de la sala
+  var letrero = new THREE.Mesh(new THREE.PlaneGeometry(4, 1.1), new THREE.MeshBasicMaterial({ map: textoTextura(nombre, '#1a3f49', '#ff6600') }));
+  letrero.position.set(cx, 3.3, LARGO / 2 - 0.05); letrero.rotation.y = Math.PI; scene.add(letrero);
+
+  // 15 marcos: 8 en la pared del fondo, 4 en cada pared lateral (3 y 4)
+  var posiciones = [];
+  var i;
+  for (i = 0; i < 6; i++) posiciones.push({ x: -7.5 + i * 3, z: -LARGO / 2 + 0.08, ry: 0 });
+  for (i = 0; i < 5; i++) posiciones.push({ x: -ANCHO / 2 + 0.08, z: -5.5 + i * 2.75, ry: Math.PI / 2 });
+  for (i = 0; i < 4; i++) posiciones.push({ x: ANCHO / 2 - 0.08, z: -4 + i * 2.75, ry: -Math.PI / 2 });
+
+  lista.forEach(function (d, k) {
+    var p = posiciones[k]; if (!p) return;
+    var grupo = new THREE.Group();
+    grupo.add(new THREE.Mesh(new THREE.BoxGeometry(2.1, 1.6, 0.12), marcoMat));
+    var lienzo;
+    if (d.vacio) {
+      lienzo = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 1.3), new THREE.MeshBasicMaterial({ map: textoTextura('Próximamente', '#e9e4d8', '#6b6b6b') }));
+    } else {
+      lienzo = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 1.3), new THREE.MeshBasicMaterial({ map: loader.load(d.imagen) }));
+      lienzo.userData = d; clicables.push(lienzo);
+    }
+    lienzo.position.z = 0.07; grupo.add(lienzo);
+    grupo.position.set(cx + p.x, 2.0, p.z); grupo.rotation.y = p.ry; scene.add(grupo);
+  });
+}
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+construirSala(0, ANIO2025, 'Sala 2025');
+construirSala(SEP, ANIO2026, 'Sala 2026');
+
+// puertas: dos carteles en la pared derecha de 2025 y la izquierda de 2026, y un pasillo visual
+function puerta(x, z, ry, texto) {
+  var m = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 2.8), new THREE.MeshBasicMaterial({ map: textoTextura(texto, '#3a2a1a', '#ffd9a0') }));
+  m.position.set(x, 1.4, z); m.rotation.y = ry; scene.add(m);
+}
+puerta(ANCHO / 2 - 0.1, 6, -Math.PI / 2, 'Sala 2026 →');
+puerta(SEP - ANCHO / 2 + 0.1, 6, Math.PI / 2, '← Sala 2025');
 
 // ===== MOVIMIENTO =====
 var yaw = 0, pitch = 0;
@@ -128,7 +194,6 @@ window.addEventListener('pointerup', function (e) {
   }
 });
 
-// joystick táctil
 var joy = document.getElementById('joy'), palanca = document.getElementById('palanca');
 var joyId = null;
 joy.addEventListener('pointerdown', function (e) { e.stopPropagation(); joyId = e.pointerId; joy.setPointerCapture(e.pointerId); moverPalanca(e); });
@@ -159,6 +224,7 @@ document.getElementById('cerrar').addEventListener('click', function () { marco.
 function ajustar() { renderer.setSize(window.innerWidth, window.innerHeight, false); camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); }
 window.addEventListener('resize', ajustar); ajustar();
 
+var etiquetaSala = document.getElementById('sala');
 var ultimo = performance.now();
 function animar(t) {
   var dt = Math.min((t - ultimo) / 1000, 0.05); ultimo = t;
@@ -168,12 +234,23 @@ function animar(t) {
   if (teclas['a'] || teclas['arrowleft']) lado -= 1;
   if (teclas['d'] || teclas['arrowright']) lado += 1;
   adelante += -joyY; lado += joyX;
-  var vel = 3 * dt;
+  var vel = 3.5 * dt;
   camera.position.x += (-Math.sin(yaw) * adelante + Math.cos(yaw) * lado) * vel;
   camera.position.z += (-Math.cos(yaw) * adelante - Math.sin(yaw) * lado) * vel;
-  var lim = ANCHO / 2 - 0.6;
-  camera.position.x = Math.max(-lim, Math.min(lim, camera.position.x));
-  camera.position.z = Math.max(-lim, Math.min(lim, camera.position.z));
+
+  // límites: dentro de la sala actual; la puerta (z cerca de 6) conecta ambas salas
+  var zLim = LARGO / 2 - 0.6;
+  camera.position.z = Math.max(-zLim, Math.min(zLim, camera.position.z));
+  var enPuerta = camera.position.z > 4.5 && camera.position.z < 7.5;
+  var xMin = -ANCHO / 2 + 0.6, xMax = SEP + ANCHO / 2 - 0.6;
+  var xFinSala1 = ANCHO / 2 - 0.6, xInicioSala2 = SEP - ANCHO / 2 + 0.6;
+  if (!enPuerta) {
+    if (camera.position.x > xFinSala1 && camera.position.x < SEP / 2) camera.position.x = xFinSala1;
+    if (camera.position.x < xInicioSala2 && camera.position.x >= SEP / 2) camera.position.x = xInicioSala2;
+  }
+  camera.position.x = Math.max(xMin, Math.min(xMax, camera.position.x));
+
+  etiquetaSala.textContent = camera.position.x < SEP / 2 ? 'Sala 2025' : 'Sala 2026';
   camera.rotation.order = 'YXZ'; camera.rotation.y = yaw; camera.rotation.x = pitch;
   renderer.render(scene, camera);
   requestAnimationFrame(animar);
