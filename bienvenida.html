@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenidos y bienvenidas | Voces y Miradas de la Investigación</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #f2f2f2;
+    background: linear-gradient(160deg, #1a1a1a 0%, #2b1220 55%, #3a1a10 100%);
+    padding: 40px 20px 90px;
+  }
+  .contenedor { max-width: 900px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    color: #ff6600;
+    margin-bottom: 36px;
+    letter-spacing: 1px;
+  }
+  .cuadro {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,102,0,0.5);
+    border-left: 6px solid #ff6600;
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+    font-size: 1.1rem;
+    line-height: 1.65;
+  }
+  .cuadro.bordo { border-left-color: #8a1050; }
+  .invitacion {
+    background: rgba(138,16,80,0.25);
+    border: 2px solid #ff6600;
+    border-radius: 12px;
+    padding: 26px;
+    text-align: center;
+    font-size: 1.15rem;
+    line-height: 1.65;
+    margin-top: 30px;
+  }
+  .boton {
+    display: inline-block;
+    margin-top: 22px;
+    background: #8a1050;
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 34px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    border: 2px solid #ff6600;
+  }
+  .boton:hover { background: #a8186a; }
+  @media (max-width: 600px) {
+    h1 { font-size: 1.6rem; }
+    .cuadro, .invitacion { font-size: 1rem; padding: 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Bienvenidos y bienvenidas</h1>
+
+    <div class="cuadro">
+      Esta página es un espacio de encuentro y divulgación científica concebido y diseñado por los docentes Hernán Cobos y Mauro Sorolla, ambos integrantes del Área Metodológica.
+    </div>
+
+    <div class="cuadro bordo">
+      Como especialistas en el área, nuestra convicción es que el conocimiento no debe quedar encerrado en las aulas ni en los formatos tradicionales: tiene que circular, abrirse a la comunidad y ponerse en valor.
+    </div>
+
+    <div class="cuadro">
+      En este sitio web van a encontrar el corazón de nuestro trabajo compartido: las producciones elaboradas por los/as estudiantes de las diferentes asignaturas y carreras en las que formamos parte. Aquí confluyen trabajos finales, indagaciones y proyectos que los/as alumnos/as han desarrollado a lo largo de sus cursadas, materializados en formatos tan diversos y dinámicos como videos, podcasts y otras propuestas multimedia.
+    </div>
+
+    <div class="cuadro bordo">
+      La idea central es que puedan explorar, escuchar, ver y acceder directamente a cada una de estas producciones. Este espacio busca ser, en definitiva, una ventana abierta al esfuerzo, la creatividad y el rigor académico de quienes cursan con nosotros, demostrando que hacer ciencia también es comunicar, crear y compartir con otros.
+    </div>
+
+    <div class="invitacion">
+      Para finalizar, los/as invitamos a adentrarse en nuestra próxima sección: una galería interactiva concebida como un recorrido por los pasillos de un salón de arte. Allí encontrarán cada una de las presentaciones exhibidas en formato de cuadros digitales, organizadas de manera intuitiva por año, carrera y tipo de producción, para que puedan caminar visualmente este espacio y descubrir el talento de nuestros/as estudiantes como si estuvieran recorriendo una muestra.
+      <br>
+      <a class="boton" href="galeria3d.html">Tocá para entrar a la galería</a>
+    </div>
+  </div>
+
+<audio id="musicaFondo" src="musica.mp3" loop preload="auto"></audio>
+<button id="botonMusica" style="position:fixed;bottom:16px;right:16px;z-index:99999;background:rgba(20,20,20,0.75);color:#fff;border:2px solid #ff6600;border-radius:24px;padding:10px 16px;font-size:15px;cursor:pointer;font-family:sans-serif;">🔊 Música</button>
+<script>
+(function () {
+  var audio = document.getElementById('musicaFondo');
+  var boton = document.getElementById('botonMusica');
+  audio.volume = 0.35;
+  var silenciada = localStorage.getItem('musicaSilenciada') === '1';
+  function actualizarBoton() {
+    boton.textContent = silenciada ? '🔇 Música' : '🔊 Música';
+  }
+  function intentarReproducir() {
+    if (silenciada) return;
+    audio.play().then(function () { quitarEscuchas(); }).catch(function () {});
+  }
+  function quitarEscuchas() {
+    ['click', 'touchstart', 'keydown'].forEach(function (e) {
+      document.removeEventListener(e, intentarReproducir);
+    });
+  }
+  boton.addEventListener('click', function (ev) {
+    ev.stopPropagation();
+    silenciada = !silenciada;
+    localStorage.setItem('musicaSilenciada', silenciada ? '1' : '0');
+    if (silenciada) { audio.pause(); } else { audio.play().catch(function () {}); }
+    actualizarBoton();
+  });
+  ['click', 'touchstart', 'keydown'].forEach(function (e) {
+    document.addEventListener(e, intentarReproducir);
+  });
+  actualizarBoton();
+  intentarReproducir();
+})();
+</script>
+</body>
+</html>
