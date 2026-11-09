@@ -115,7 +115,7 @@ function textoTextura(texto, fondo, color) {
 var clicables = [];
 var loader = new THREE.TextureLoader();
 
-function construirSala(cx, lista, nombre) {
+function construirSala(cx, lista, nombre, frase) {
   var piso = new THREE.Mesh(new THREE.PlaneGeometry(ANCHO, LARGO), matPiso);
   piso.rotation.x = -Math.PI / 2; piso.position.x = cx; scene.add(piso);
   var techo = new THREE.Mesh(new THREE.PlaneGeometry(ANCHO, LARGO), matTecho);
@@ -161,10 +161,10 @@ function construirSala(cx, lista, nombre) {
       pata.position.set(cx + 3.2 + px, 0.25, bz); scene.add(pata);
     });
   });
-
   // letrero de la sala
   var letrero = new THREE.Mesh(new THREE.PlaneGeometry(4, 1.1), new THREE.MeshBasicMaterial({ map: textoTextura(nombre, '#1a3f49', '#ff6600') }));
   letrero.position.set(cx, 3.3, LARGO / 2 - 0.05); letrero.rotation.y = Math.PI; scene.add(letrero);
+  
 
   // 15 marcos: 8 en la pared del fondo, 4 en cada pared lateral (3 y 4)
   var posiciones = [];
@@ -190,8 +190,8 @@ function construirSala(cx, lista, nombre) {
 }
 
 scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-construirSala(0, ANIO2025, 'Sala 2025');
-construirSala(SEP, ANIO2026, 'Sala 2026');
+construirSala(0, ANIO2025, 'Sala 2025', 'Primeras miradas:|donde la investigación empieza a hablar');
+construirSala(SEP, ANIO2026, 'Sala 2026', 'Nuevas voces: preguntas|que siguen abriendo caminos');
 
 // puertas: dos carteles en la pared derecha de 2025 y la izquierda de 2026, y un pasillo visual
 function puerta(x, z, ry, texto) {
