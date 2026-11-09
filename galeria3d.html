@@ -161,9 +161,18 @@ function construirSala(cx, lista, nombre, frase) {
       pata.position.set(cx + 3.2 + px, 0.25, bz); scene.add(pata);
     });
   });
-  // letrero de la sala
-  var letrero = new THREE.Mesh(new THREE.PlaneGeometry(4, 1.1), new THREE.MeshBasicMaterial({ map: textoTextura(nombre, '#1a3f49', '#ff6600') }));
-  letrero.position.set(cx, 3.3, LARGO / 2 - 0.05); letrero.rotation.y = Math.PI; scene.add(letrero);
+    // letrero de la sala con frase
+  var cartel = document.createElement('canvas'); cartel.width = 1024; cartel.height = 400;
+  var gc = cartel.getContext('2d');
+  gc.fillStyle = '#1a3f49'; gc.fillRect(0, 0, 1024, 400);
+  gc.strokeStyle = '#ff6600'; gc.lineWidth = 8; gc.strokeRect(14, 14, 996, 372);
+  gc.fillStyle = '#ff6600'; gc.font = 'bold 110px Georgia'; gc.textAlign = 'center'; gc.textBaseline = 'middle';
+  gc.fillText(nombre, 512, 140);
+  gc.fillStyle = '#ffffff'; gc.font = 'italic 52px Georgia';
+  var l1 = frase.split('|')[0], l2 = frase.split('|')[1] || '';
+  gc.fillText(l1, 512, 270); gc.fillText(l2, 512, 335);
+  var letrero = new THREE.Mesh(new THREE.PlaneGeometry(7, 2.7), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cartel) }));
+  letrero.position.set(cx, 2.4, LARGO / 2 - 0.05); letrero.rotation.y = Math.PI; scene.add(letrero);
   
 
   // 15 marcos: 8 en la pared del fondo, 4 en cada pared lateral (3 y 4)
