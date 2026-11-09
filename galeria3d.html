@@ -258,8 +258,17 @@ function tocar(px, py) {
   if (hit) abrir(hit.object.userData);
 }
 var visor = document.getElementById('visor'), marco = document.getElementById('marco'), info = document.getElementById('info');
-function abrir(d) { info.textContent = d.titulo + ' — ' + d.autor; marco.src = d.enlace; visor.style.display = 'flex'; }
-document.getElementById('cerrar').addEventListener('click', function () { marco.src = ''; visor.style.display = 'none'; });
+function abrir(d) {
+  info.textContent = d.titulo + ' — ' + d.autor;
+  marco.src = d.enlace;
+  visor.style.display = 'flex';
+  if (window.pausarMusicaFondo) window.pausarMusicaFondo();
+}
+document.getElementById('cerrar').addEventListener('click', function () {
+  marco.src = '';
+  visor.style.display = 'none';
+  if (window.reanudarMusicaFondo) window.reanudarMusicaFondo();
+});
 
 // ===== BUCLE =====
 function ajustar() { renderer.setSize(window.innerWidth, window.innerHeight, false); camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); }
@@ -299,20 +308,20 @@ function animar(t) {
 requestAnimationFrame(animar);
 </script>
 <audio id="musicaFondo" src="musica.mp3" loop preload="auto"></audio>
-<button id="botonMusica" style="position:fixed;top:16px;right:16px;z-index:99999;background:rgba(20,20,20,0.75);color:#fff;border:2px solid #ff6600;border-radius:24px;padding:10px 16px;font-size:15px;cursor:pointer;font-family:sans-serif;">🔊 Música</button>
 <script>
 (function () {
   var audio = document.getElementById('musicaFondo');
   var boton = document.getElementById('botonMusica');
   audio.volume = 0.35;
   var silenciada = localStorage.getItem('musicaSilenciada') === '1';
+  var visorAbierto = false;
 
   function actualizarBoton() {
     boton.textContent = silenciada ? '🔇 Música' : '🔊 Música';
   }
 
   function intentarReproducir() {
-    if (silenciada) return;
+    if (silenciada || visorAbierto) return;
     audio.play().then(function () {
       quitarEscuchas();
     }).catch(function () {});
@@ -330,11 +339,21 @@ requestAnimationFrame(animar);
     localStorage.setItem('musicaSilenciada', silenciada ? '1' : '0');
     if (silenciada) {
       audio.pause();
-    } else {
+    } else if (!visorAbierto) {
       audio.play().catch(function () {});
     }
     actualizarBoton();
   });
+
+  // Las usa el visor de videos/podcast
+  window.pausarMusicaFondo = function () {
+    visorAbierto = true;
+    audio.pause();
+  };
+  window.reanudarMusicaFondo = function () {
+    visorAbierto = false;
+    if (!silenciada) audio.play().catch(function () {});
+  };
 
   ['click', 'touchstart', 'keydown'].forEach(function (e) {
     document.addEventListener(e, intentarReproducir);
