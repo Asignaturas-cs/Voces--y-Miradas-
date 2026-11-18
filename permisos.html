@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autorización para publicar tu trabajo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=Figtree:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F5F5; --ink:#15262B; --muted:#4A5E64; --line:#C9D6D8;
+  --teal:#0E5A63; --on-teal:#FFFFFF; --berry:#9B3563;
+  --serif:"Literata",Georgia,"Times New Roman",serif;
+  --sans:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1B1F; --ink:#E7EFF0; --muted:#A6B8BC; --line:#2A3C41;
+    --teal:#6CC4CC; --on-teal:#0F1B1F; --berry:#E58BB1;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1B1F; --ink:#E7EFF0; --muted:#A6B8BC; --line:#2A3C41;
+  --teal:#6CC4CC; --on-teal:#0F1B1F; --berry:#E58BB1;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 var(--serif)}
+main{max-width:34rem;margin:0 auto;padding:2rem 1.25rem 3rem}
+h1{position:relative;font:700 clamp(2.1rem,9vw,2.9rem)/1.1 var(--serif);letter-spacing:-.01em;margin:2.5rem 0 1.25rem}
+h1::before{content:"\201C";position:absolute;left:-.05em;top:-.55em;font-size:2.6em;color:var(--teal);opacity:.25;line-height:1;pointer-events:none}
+.lead{margin:0 0 2rem;max-width:32rem}
+h2{font:700 1.2rem/1.3 var(--sans);margin:0 0 .75rem}
+ul{list-style:none;margin:0 0 2rem;padding:0;border-top:1px solid var(--line)}
+li{padding:.9rem 0;border-bottom:1px solid var(--line)}
+li strong{font-family:var(--sans);font-weight:700;display:block;color:var(--teal)}
+.group{border-left:3px solid var(--berry);padding:.1rem 0 .1rem .9rem;margin:0 0 2rem}
+.group p{margin:0}
+.actions{display:grid;gap:.75rem;margin-bottom:2rem}
+.btn{display:block;text-align:center;text-decoration:none;font:700 1.0625rem/1.2 var(--sans);padding:1rem 1.25rem;border-radius:.6rem;border:2px solid var(--teal)}
+.btn.primary{background:var(--teal);color:var(--on-teal)}
+.btn.secondary{color:var(--teal);background:transparent}
+.btn:focus-visible{outline:3px solid var(--berry);outline-offset:3px}
+.btn:active{transform:translateY(1px)}
+.team{font:400 .9rem/1.5 var(--sans);color:var(--muted);margin:0;border-top:1px solid var(--line);padding-top:1rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>¿Querés que tu trabajo se publique?</h1>
+  <p class="lead">Los trabajos de Metodología de la Investigación se muestran en <em>Voces y Miradas de la Investigación</em>. Para publicar el tuyo necesitamos tu autorización por escrito. Se completa desde el celular en unos minutos.</p>
+
+  <h2>Qué estás autorizando</h2>
+  <ul>
+    <li><strong>Publicación con tu nombre</strong>Tu trabajo se muestra en la web de la asignatura, con tu nombre y apellido como autor/a. No se publican tu DNI, domicilio, teléfono ni correo.</li>
+    <li><strong>Licencia abierta</strong>Se publica bajo Creative Commons BY-NC-SA 4.0: se puede leer, descargar y citar con fines educativos, nunca con fines comerciales.</li>
+    <li><strong>Seguís siendo dueño/a de tu obra</strong>La autorización no es exclusiva: podés presentarla o difundirla donde quieras. No hay pago ni retribución para ninguna de las partes.</li>
+    <li><strong>Es voluntario</strong>No influye en tu evaluación ni en la regularización de la asignatura. Podés retirar tu autorización cuando quieras y se da de baja en un máximo de 10 días hábiles.</li>
+  </ul>
+
+  <div class="group">
+    <p>Si tu trabajo es grupal, <strong>cada integrante</strong> completa su propia autorización.</p>
+  </div>
+
+  <div class="actions">
+    <!-- Reemplazá PEGAR_LINK_DEL_FORMULARIO por el enlace de tu Google Formulario -->
+    <a class="btn primary" href="PEGAR_LINK_DEL_FORMULARIO">Completar la autorización</a>
+    <a class="btn secondary" href="https://asignaturas-cs.github.io/Voces--y-Miradas-/">Ver los trabajos publicados</a>
+  </div>
+
+  <p class="team">Equipo docente: Prof. Esp. Oscar Hernán Cobos y Prof. Esp. Mauro Nicolás Sorolla.</p>
+</main>
+</body>
+</html>
