@@ -1,90 +1,183 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Voces y Miradas de la Investigación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Literata:opsz,wght@7..72,400&display=swap" rel="stylesheet">
 <style>
-  body { margin: 0; min-height: 100vh; font-family: Georgia, serif; color: #f2f2f2;
-    background: linear-gradient(160deg, #3a3a3a 0%, #1f1f1f 55%, #0d0d0d 100%); }
-  .encabezado { padding: 24px 28px; text-align: left; border-left: 8px solid #ff6600; margin: 24px 0 0 24px; }
-  .inst { margin: 4px 0; font-size: 0.95em; color: #e8e8e8; }
-  .inst.univ { font-size: 1.2em; color: #ff6600; font-weight: bold; }
-  .inst.area { font-style: italic; color: #cfcfcf; }
-  .centro { display: flex; flex-direction: column; align-items: center; justify-content: center;
-    min-height: 60vh; padding: 20px; text-align: center; }
-  .recuadro { border: 3px solid #ff6600; padding: 36px 40px; max-width: 640px;
-    background: rgba(255,255,255,0.04); box-shadow: 0 10px 24px rgba(0,0,0,0.5); }
-  h1 { margin: 0 0 12px; font-size: 2.2em; letter-spacing: 1px; }
-  p.sub { margin: 0; color: #bdbdbd; font-style: italic; }
-  a.entrar { display: inline-block; margin-top: 36px; padding: 14px 34px; background: #8a1050; color: #fff;
-    text-decoration: none; font-size: 1.1em; border-radius: 4px; box-shadow: 0 6px 14px rgba(0,0,0,0.5); }
-  a.entrar:hover { background: #a8135f; }
+  :root {
+    --fondo-a: #3a0b27;
+    --fondo-b: #170a2c;
+    --marfil: #fff6e6;
+    --azafran: #6ff2c5;
+    --sans: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --serif: "Literata", Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: linear-gradient(160deg, var(--fondo-a), var(--fondo-b));
+    color: var(--marfil);
+    font-family: var(--sans);
+    overflow: hidden;
+  }
+  #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .velo {
+    position: fixed; inset: 0; pointer-events: none;
+    background: linear-gradient(0deg, rgba(23,10,44,.85) 0%, rgba(23,10,44,.35) 45%, rgba(23,10,44,0) 70%);
+  }
+  .portada {
+    position: relative; z-index: 2;
+    height: 100%; height: 100svh;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 1.5rem 1.25rem 2rem;
+    max-width: 78rem; margin: 0 auto;
+  }
+  .institucion {
+    margin: 0 auto; text-align: center; font-family: var(--serif); font-size: 1rem; line-height: 1.5;
+    opacity: .9; max-width: 30rem; padding: 0 4.5rem;
+  }
+  .institucion span { display: block; }
+  .musica {
+    position: fixed; top: 1.25rem; right: 1.25rem; z-index: 5;
+    background: rgba(23,10,44,.6); color: var(--marfil);
+    border: 1px solid rgba(255,246,230,.45); border-radius: 2rem;
+    padding: .55rem .9rem; font: 600 .875rem var(--sans); cursor: pointer;
+    min-height: 2.75rem;
+  }
+  .musica:focus-visible, .entrar:focus-visible { outline: 3px solid var(--azafran); outline-offset: 3px; }
+  h1 { margin: 0 0 1rem; font-weight: 800; line-height: .95; letter-spacing: -.025em; }
+  h1 .l { display: block; overflow: hidden; padding-bottom: .08em; }
+  h1 .l > span { display: block; }
+  .l1 { font-size: clamp(3.4rem, 17vw, 9.5rem); }
+  .l2 { font-size: clamp(1.6rem, 7vw, 3.6rem); font-weight: 500; letter-spacing: -.01em; }
+  .sub { margin: 0 0 2rem; font-family: var(--serif); font-size: 1.0625rem; max-width: 30rem; opacity: .92; }
+  .entrar {
+    display: inline-flex; align-items: center; gap: .75rem;
+    color: var(--fondo-a); background: var(--azafran);
+    text-decoration: none; font-weight: 800; font-size: 1.125rem;
+    padding: 1rem 1.6rem; border-radius: 3rem; min-height: 3.25rem;
+  }
+  .entrar i {
+    width: .7rem; height: .7rem; border-radius: 50%; background: var(--fondo-a);
+    animation: latido 1.8s ease-out infinite;
+  }
+  @keyframes latido { 0% { box-shadow: 0 0 0 0 rgba(58,11,39,.55); } 100% { box-shadow: 0 0 0 .9rem rgba(58,11,39,0); } }
+  @keyframes subir { from { transform: translateY(105%); } to { transform: none; } }
+  @keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
+  .l1 > span { animation: subir .9s cubic-bezier(.2,.8,.2,1) .15s both; }
+  .l2 > span { animation: subir .9s cubic-bezier(.2,.8,.2,1) .35s both; }
+  .sub, .entrar { animation: aparecer .8s ease .8s both; }
+  @media (prefers-reduced-motion: reduce) {
+    .l1 > span, .l2 > span, .sub, .entrar, .entrar i { animation: none; }
+  }
 </style>
 </head>
 <body>
-<div class="encabezado">
-  <p class="inst univ">Universidad Nacional de San Luis</p>
-  <p class="inst">Facultad de Ciencias Humanas</p>
-  <p class="inst">Departamento de Educación y Formación Docente</p>
-  <p class="inst area">Área 6 · Metodológica</p>
-</div>
+  <canvas id="c" aria-hidden="true"></canvas>
+  <div class="velo"></div>
 
-<div class="centro">
-  <div class="recuadro">
-    <h1>Voces y Miradas de la Investigación</h1>
-    <p class="sub">Producciones de estudiantes de Metodología de la Investigación</p>
-  </div>
-  <a class="entrar" href="bienvenida.html">Tocá para continuar</a>
-</div>
-</body>
-</html>
+  <button class="musica" id="musica" type="button" aria-pressed="false">🔊 Música</button>
+  <audio id="audio" src="musica.mp3" loop preload="auto"></audio>
 
-</div>
-<audio id="musicaFondo" src="musica.mp3" loop preload="auto"></audio>
-<button id="botonMusica" style="position:fixed;bottom:16px;right:16px;z-index:99999;background:rgba(20,20,20,0.75);color:#fff;border:2px solid #ff6600;border-radius:24px;padding:10px 16px;font-size:15px;cursor:pointer;font-family:sans-serif;">🔊 Música</button>
+  <main class="portada">
+    <p class="institucion">Asignaturas del Área N° 6 “Metodológica” de la Facultad de Ciencias Humanas de la UNSL</p>
+
+    <section>
+      <h1>
+        <span class="l l1"><span>Voces y Miradas</span></span>
+        <span class="l l2"><span>de la Investigación</span></span>
+      </h1>
+      <p class="sub">Producciones de estudiantes de Metodología de la Investigación</p>
+      <a class="entrar" href="bienvenida.html"><i></i>Tocá para continuar</a>
+    </section>
+  </main>
+
 <script>
 (function () {
-  var audio = document.getElementById('musicaFondo');
-  var boton = document.getElementById('botonMusica');
-  audio.volume = 0.35;
-  var silenciada = localStorage.getItem('musicaSilenciada') === '1';
+  var c = document.getElementById('c'), g = c.getContext('2d');
+  var w, h, dpr, px = .5, py = .5, tx = .5, ty = .5;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function actualizarBoton() {
-    boton.textContent = silenciada ? '🔇 Música' : '🔊 Música';
+  function size() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = innerWidth; h = innerHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (reduce) draw(0);
   }
+  addEventListener('resize', size);
+  addEventListener('pointermove', function (e) { tx = e.clientX / w; ty = e.clientY / h; });
 
-  function intentarReproducir() {
-    if (silenciada) return;
-    audio.play().then(function () {
-      quitarEscuchas();
-    }).catch(function () {});
-  }
+  function draw(t) {
+    px += (tx - px) * .05; py += (ty - py) * .05;
+    g.clearRect(0, 0, w, h);
+    var chico = w < 700;
+    var cx = chico ? w * .5 : w * .74, cy = chico ? h * .3 : h * .42;
+    var R = Math.min(w, h) * (chico ? .42 : .34);
 
-  function quitarEscuchas() {
-    ['click', 'touchstart', 'keydown'].forEach(function (e) {
-      document.removeEventListener(e, intentarReproducir);
-    });
-  }
-
-  boton.addEventListener('click', function (ev) {
-    ev.stopPropagation();
-    silenciada = !silenciada;
-    localStorage.setItem('musicaSilenciada', silenciada ? '1' : '0');
-    if (silenciada) {
-      audio.pause();
-    } else {
-      audio.play().catch(function () {});
+    /* la mirada: círculos concéntricos que siguen al puntero */
+    for (var k = 0; k < 6; k++) {
+      var r = R * (.35 + k * .17) + Math.sin(t * .0006 + k) * 6;
+      g.beginPath();
+      g.arc(cx + (px - .5) * 36 * (k + 1) / 6, cy + (py - .5) * 36 * (k + 1) / 6, r, 0, 7);
+      g.strokeStyle = 'rgba(255,246,230,' + (.08 + .025 * k) + ')';
+      g.lineWidth = 1; g.stroke();
     }
-    actualizarBoton();
-  });
+    g.beginPath();
+    g.arc(cx + (px - .5) * 60, cy + (py - .5) * 60, R * .12, 0, 7);
+    g.fillStyle = '#6ff2c5'; g.fill();
 
-  ['click', 'touchstart', 'keydown'].forEach(function (e) {
-    document.addEventListener(e, intentarReproducir);
-  });
+    /* las voces: líneas ondulantes que se curvan cerca del puntero */
+    var n = 16;
+    for (var i = 0; i < n; i++) {
+      var base = h * (.1 + .82 * i / (n - 1));
+      g.beginPath();
+      for (var X = 0; X <= w; X += 8) {
+        var u = X / w;
+        var y = base + Math.sin(u * 5 + t * .0007 + i * .45) * 14 * (1 + i / n)
+                     + Math.sin(u * 11 - t * .0011 + i) * 6;
+        var d = (u - px) * (u - px) + (base / h - py) * (base / h - py);
+        y -= Math.exp(-d * 30) * 60 * Math.sin(t * .002 + i);
+        if (X) g.lineTo(X, y); else g.moveTo(X, y);
+      }
+      var acento = i === 9;
+      g.strokeStyle = acento ? 'rgba(111,242,197,.9)' : 'rgba(255,246,230,' + (.1 + .12 * Math.pow(Math.sin(i), 2)) + ')';
+      g.lineWidth = acento ? 1.6 : 1;
+      g.stroke();
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
 
-  actualizarBoton();
-  intentarReproducir();
+  size();
+  if (!reduce) requestAnimationFrame(draw);
+
+  /* música: igual que antes, con botón para activar o silenciar */
+  var audio = document.getElementById('audio');
+  var btn = document.getElementById('musica');
+  var quiere = true;
+
+  function estado() {
+    var suena = !audio.paused;
+    btn.textContent = suena ? '🔊 Música' : '🔇 Música';
+    btn.setAttribute('aria-pressed', String(suena));
+  }
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (audio.paused) { quiere = true; audio.play().then(estado, estado); }
+    else { quiere = false; audio.pause(); estado(); }
+  });
+  function primerToque() {
+    if (quiere && audio.paused) audio.play().then(estado, estado);
+    removeEventListener('pointerdown', primerToque);
+  }
+  addEventListener('pointerdown', primerToque);
+  audio.play().then(estado, estado);
+  audio.addEventListener('play', estado);
+  audio.addEventListener('pause', estado);
 })();
 </script>
 </body>
