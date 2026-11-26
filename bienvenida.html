@@ -10,31 +10,32 @@
     min-height: 100vh;
     font-family: Georgia, 'Times New Roman', serif;
     color: #f2f2f2;
-    background: linear-gradient(160deg, #1a1a1a 0%, #2b1220 55%, #3a1a10 100%);
+    background: linear-gradient(160deg, #3a0b27 0%, #170a2c 100%) fixed;
     padding: 40px 20px 90px;
   }
-  .contenedor { max-width: 900px; margin: 0 auto; }
+  #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+  .contenedor { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
   h1 {
     text-align: center;
     font-size: 2.2rem;
-    color: #ff6600;
+    color: #6ff2c5;
     margin-bottom: 36px;
     letter-spacing: 1px;
   }
   .cuadro {
     background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,102,0,0.5);
-    border-left: 6px solid #ff6600;
+    border: 1px solid rgba(111,242,197,0.4);
+    border-left: 6px solid #6ff2c5;
     border-radius: 10px;
     padding: 22px 26px;
     margin-bottom: 22px;
     font-size: 1.1rem;
     line-height: 1.65;
   }
-  .cuadro.bordo { border-left-color: #8a1050; }
+  .cuadro.bordo { border-left-color: #fff6e6; }
   .invitacion {
-    background: rgba(138,16,80,0.25);
-    border: 2px solid #ff6600;
+    background: rgba(255,246,230,0.06);
+    border: 2px solid #6ff2c5;
     border-radius: 12px;
     padding: 26px;
     text-align: center;
@@ -45,15 +46,44 @@
   .boton {
     display: inline-block;
     margin-top: 22px;
-    background: #8a1050;
-    color: #fff;
+    background: #6ff2c5;
+    color: #3a0b27;
     text-decoration: none;
     padding: 14px 34px;
     border-radius: 30px;
     font-size: 1.1rem;
-    border: 2px solid #ff6600;
+    border: 2px solid #6ff2c5;
   }
-  .boton:hover { background: #a8186a; }
+  .boton:hover { background: #9af7d9; }
+  .contacto, .libro {
+    margin-top: 30px;
+    padding: 18px;
+    text-align: center;
+    border: 1px solid rgba(111,242,197,0.4);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .libro { margin-top: 22px; background: rgba(255,246,230,0.06); }
+  .contacto a { color: #6ff2c5; font-weight: bold; }
+  .libro a {
+    display: inline-block;
+    margin-top: 12px;
+    background: #6ff2c5;
+    color: #3a0b27;
+    text-decoration: none;
+    padding: 10px 26px;
+    border-radius: 24px;
+    border: 2px solid #6ff2c5;
+  }
+  .libro a:hover { background: #9af7d9; }
+  #botonMusica {
+    position: fixed; bottom: 16px; right: 16px; z-index: 99999;
+    background: rgba(23,10,44,0.8); color: #fff; border: 2px solid #6ff2c5;
+    border-radius: 24px; padding: 10px 16px; font-size: 15px; cursor: pointer; font-family: sans-serif;
+  }
+  a:focus-visible, button:focus-visible { outline: 3px solid #6ff2c5; outline-offset: 3px; }
   @media (max-width: 600px) {
     h1 { font-size: 1.6rem; }
     .cuadro, .invitacion { font-size: 1rem; padding: 18px; }
@@ -61,6 +91,8 @@
 </style>
 </head>
 <body>
+  <canvas id="c" aria-hidden="true"></canvas>
+
   <div class="contenedor">
     <h1>Bienvenidos y bienvenidas</h1>
 
@@ -83,20 +115,62 @@
       Para finalizar, los/as invitamos a adentrarse en nuestra próxima sección: una galería interactiva concebida como un recorrido por los pasillos de un salón de arte. Allí encontrarán cada una de las presentaciones exhibidas en formato de cuadros digitales, organizadas de manera intuitiva por año, carrera y tipo de producción, para que puedan caminar visualmente este espacio y descubrir el talento de nuestros/as estudiantes como si estuvieran recorriendo una muestra.
       <br>
       <a class="boton" href="galeria3d.html">Tocá para entrar a la galería</a>
-     <div class="contacto" style="margin-top:30px;padding:18px;text-align:center;border:1px solid rgba(255,102,0,0.5);border-radius:10px;background:rgba(255,255,255,0.06);font-size:1rem;line-height:1.6;">
-  Para consultas o comentarios, escribinos a<br>
-  <a href="mailto:asignaturascs@gmail.com" style="color:#ff6600;font-weight:bold;">asignaturascs@gmail.com</a>
-</div>
-      <div class="libro" style="margin-top:22px;padding:18px;text-align:center;border:1px solid rgba(255,102,0,0.5);border-radius:10px;background:rgba(138,16,80,0.25);font-size:1rem;line-height:1.6;">
-  Libro de visitas: dejanos tu nombre, de dónde nos visitás y un mensaje.<br>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfHYVLZaPy3v9AT3Y5DwHrQoQUxb0VahQryskMKQDavVPdOSg/viewform" target="_blank" style="display:inline-block;margin-top:12px;background:#8a1050;color:#fff;text-decoration:none;padding:10px 26px;border-radius:24px;border:2px solid #ff6600;">Firmar el libro de visitas</a>
-</div>
+      <div class="contacto">
+        Para consultas o comentarios, escribinos a<br>
+        <a href="mailto:asignaturascs@gmail.com">asignaturascs@gmail.com</a>
+      </div>
+      <div class="libro">
+        Libro de visitas: dejanos tu nombre, de dónde nos visitás y un mensaje.<br>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfHYVLZaPy3v9AT3Y5DwHrQoQUxb0VahQryskMKQDavVPdOSg/viewform" target="_blank" rel="noopener">Firmar el libro de visitas</a>
+      </div>
     </div>
   </div>
 
 <audio id="musicaFondo" src="musica.mp3" loop preload="auto"></audio>
-<button id="botonMusica" style="position:fixed;bottom:16px;right:16px;z-index:99999;background:rgba(20,20,20,0.75);color:#fff;border:2px solid #ff6600;border-radius:24px;padding:10px 16px;font-size:15px;cursor:pointer;font-family:sans-serif;">🔊 Música</button>
+<button id="botonMusica" type="button">🔊 Música</button>
+
 <script>
+/* fondo: líneas onduladas suaves que derivan con el scroll y se curvan cerca del puntero */
+(function () {
+  var c = document.getElementById('c'), g = c.getContext('2d');
+  var w, h, dpr, px = .5, py = .5, tx = .5, ty = .5;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = innerWidth; h = innerHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (reduce) draw(0);
+  }
+  addEventListener('resize', size);
+  addEventListener('pointermove', function (e) { tx = e.clientX / w; ty = e.clientY / h; });
+  function draw(t) {
+    px += (tx - px) * .05; py += (ty - py) * .05;
+    g.clearRect(0, 0, w, h);
+    var desvio = (window.scrollY || 0) * .0009, n = 12;
+    for (var i = 0; i < n; i++) {
+      var base = h * (.06 + .9 * i / (n - 1));
+      g.beginPath();
+      for (var X = 0; X <= w; X += 8) {
+        var u = X / w;
+        var y = base + Math.sin(u * 4 + t * .0005 + i * .5 + desvio * 6) * 12
+                     + Math.sin(u * 9 - t * .0008 + i) * 5;
+        var d = (u - px) * (u - px) + (base / h - py) * (base / h - py);
+        y -= Math.exp(-d * 30) * 35 * Math.sin(t * .0018 + i);
+        if (X) g.lineTo(X, y); else g.moveTo(X, y);
+      }
+      var acento = i === 7;
+      g.strokeStyle = acento ? 'rgba(111,242,197,.5)' : 'rgba(255,246,230,' + (.06 + .07 * Math.pow(Math.sin(i), 2)) + ')';
+      g.lineWidth = acento ? 1.4 : 1;
+      g.stroke();
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  size();
+  if (!reduce) requestAnimationFrame(draw);
+})();
+
+/* música de fondo (misma lógica de antes) */
 (function () {
   var audio = document.getElementById('musicaFondo');
   var boton = document.getElementById('botonMusica');
