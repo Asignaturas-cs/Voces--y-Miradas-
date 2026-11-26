@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trabajos publicados | Voces y Miradas de la Investigación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&family=Literata:opsz,wght@7..72,400&display=swap" rel="stylesheet">
+<style>
+  :root { --a:#3a0b27; --b:#170a2c; --marfil:#fff6e6; --menta:#6ff2c5; --suave:#cdb7c4;
+    --sans:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --serif:"Literata",Georgia,serif; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background:linear-gradient(160deg,var(--a),var(--b)) fixed; color:var(--marfil); font-family:var(--serif); padding-bottom:5rem; }
+  #c { position:fixed; inset:0; width:100%; height:100%; z-index:0; }
+  .pagina { position:relative; z-index:2; max-width:72rem; margin:0 auto; padding:1.5rem 1.25rem; }
+  a { color:var(--menta); }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid var(--menta); outline-offset:3px; }
+  .volver { font:500 .9375rem var(--sans); text-decoration:none; }
+  h1 { font:600 clamp(2rem,6vw,3rem)/1.1 var(--sans); letter-spacing:-.01em; margin:1.5rem 0 .5rem; }
+  .sub { margin:0 0 1.5rem; max-width:38rem; color:var(--suave); line-height:1.6; }
+  .aviso { margin:0 0 1rem; padding:.7rem 1rem; border:1px solid rgba(111,242,197,.4); border-radius:.5rem; font:400 .9375rem var(--sans); }
+  .filtros { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:.75rem; }
+  .chip { font:500 .9375rem var(--sans); color:var(--marfil); background:transparent; border:1px solid rgba(255,246,230,.35); border-radius:2rem; padding:.5rem 1rem; min-height:2.5rem; cursor:pointer; }
+  .chip[aria-pressed="true"] { background:var(--menta); color:var(--a); border-color:var(--menta); }
+  .chip small { opacity:.75; margin-left:.25rem; }
+  .campos { display:flex; flex-wrap:wrap; gap:.6rem; margin-bottom:1rem; }
+  .campos input, .campos select { font:400 .9375rem var(--sans); color:var(--marfil); background:rgba(23,10,44,.7); border:1px solid rgba(255,246,230,.3); border-radius:.5rem; padding:.55rem .8rem; min-height:2.5rem; }
+  .campos input { flex:1 1 14rem; }
+  .campos option { color:#170a2c; }
+  .cuenta { font:400 .875rem var(--sans); color:var(--suave); margin:0 0 1rem; }
+  .grilla { display:grid; grid-template-columns:repeat(auto-fill,minmax(15rem,1fr)); gap:1rem; }
+  .tarjeta { text-align:left; font:inherit; color:inherit; background:rgba(43,10,34,.85); border:1px solid rgba(255,246,230,.2); border-radius:.75rem; overflow:hidden; padding:0; cursor:pointer; transition:border-color .25s, transform .25s; }
+  .tarjeta:hover { border-color:var(--menta); transform:translateY(-2px); }
+  .portada { height:8.5rem; display:flex; align-items:center; justify-content:center; position:relative; color:var(--menta); background-size:cover; background-position:center; }
+  .portada svg { width:2.4rem; height:2.4rem; }
+  .portada.con-imagen svg { display:none; }
+  .insignia { position:absolute; top:.6rem; left:.6rem; background:var(--a); color:var(--marfil); font:500 .75rem var(--sans); padding:.2rem .6rem; border-radius:1rem; }
+  .info { padding:.8rem 1rem 1rem; }
+  .info h2 { margin:0 0 .3rem; font:500 1.0625rem/1.3 var(--sans); }
+  .info p { margin:0; font:400 .8125rem var(--sans); color:var(--suave); }
+  .vacio { padding:2rem 0; font:400 1rem var(--sans); color:var(--suave); }
+  dialog { width:min(56rem,94vw); max-height:94vh; overflow:auto; padding:0; border:1px solid rgba(255,246,230,.25); border-radius:.75rem; background:#2b0a22; color:var(--marfil); }
+  dialog::backdrop { background:rgba(10,4,20,.82); }
+  .cab { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; padding:1.25rem 1.25rem .75rem; }
+  .cab h2 { margin:.25rem 0 .25rem; font:600 1.5rem/1.2 var(--sans); }
+  .cab p { margin:0; font:400 .9375rem var(--sans); color:var(--suave); }
+  .cerrar { flex:none; width:2.75rem; height:2.75rem; border-radius:50%; border:1px solid rgba(255,246,230,.4); background:transparent; color:var(--marfil); font-size:1.25rem; cursor:pointer; }
+  .medio { margin:0 1.25rem; border-radius:.5rem; overflow:hidden; background:#170a2c; aspect-ratio:16/9; }
+  .medio iframe, .medio video { width:100%; height:100%; border:0; display:block; }
+  .medio.audio { aspect-ratio:auto; padding:1rem; } .medio.audio audio { width:100%; }
+  .medio.sin { aspect-ratio:auto; padding:1.5rem; font:400 .9375rem var(--sans); color:var(--suave); }
+  .pie { padding:1rem 1.25rem 1.25rem; font:400 .9375rem/1.6 var(--sans); }
+  .pie .desc { margin:0 0 .75rem; font-family:var(--serif); }
+  .pie small { display:block; margin-top:.75rem; color:var(--suave); }
+  #botonMusica { position:fixed; bottom:1rem; right:1rem; z-index:99999; background:rgba(23,10,44,.85); color:#fff; border:2px solid var(--menta); border-radius:24px; padding:10px 16px; font:15px sans-serif; cursor:pointer; }
+  @media (prefers-reduced-motion: reduce) { .tarjeta { transition:none; } .tarjeta:hover { transform:none; } }
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<div class="pagina">
+  <a class="volver" href="bienvenida.html">Volver a la bienvenida</a>
+  <h1>Trabajos publicados</h1>
+  <p class="sub">Videos, podcasts y presentaciones de estudiantes de Metodología de la Investigación. Tocá un trabajo para verlo o escucharlo.</p>
+  <div id="aviso"></div>
+  <div class="filtros" id="chips"></div>
+  <div class="campos">
+    <input id="buscar" type="search" placeholder="Buscar por título o autor" aria-label="Buscar por título o autor">
+    <select id="anio" aria-label="Año"></select>
+    <select id="carrera" aria-label="Carrera"></select>
+  </div>
+  <p class="cuenta" id="cuenta" aria-live="polite"></p>
+  <div class="grilla" id="grilla"></div>
+</div>
+
+<dialog id="visor" aria-labelledby="vTitulo">
+  <div class="cab">
+    <div><span class="insignia" id="vTipo" style="position:static;display:inline-block;"></span><h2 id="vTitulo"></h2><p id="vMeta"></p></div>
+    <button class="cerrar" id="cerrar" type="button" aria-label="Cerrar">&times;</button>
+  </div>
+  <div id="vMedio"></div>
+  <div class="pie"><p class="desc" id="vDesc"></p><a id="vAbrir" target="_blank" rel="noopener">Abrir en una pestaña nueva</a><small>Publicado con autorización de sus autores/as bajo licencia Creative Commons BY-NC-SA 4.0.</small></div>
+</dialog>
+
+<audio id="musicaFondo" src="musica.mp3" loop preload="auto"></audio>
+<button id="botonMusica" type="button">🔊 Música</button>
+
+<script>
+/* ===== CONFIGURACIÓN: pegá acá el link CSV de tu planilla (Archivo > Compartir > Publicar en la web > CSV) ===== */
+var HOJA_CSV = "";
+/* ======================================================================================================== */
+
+var EJEMPLOS = [
+  {titulo:"Infancias y pantallas",autores:"Ana P. y Lucas M.",anio:"2026",carrera:"Ciencias de la Educación",tipo:"video"},
+  {titulo:"Voces de la escuela rural",autores:"Grupo 3",anio:"2026",carrera:"Profesorado en Educación Primaria",tipo:"podcast"},
+  {titulo:"Pobreza y trayectorias",autores:"Sofía R.",anio:"2026",carrera:"Ciencias de la Educación",tipo:"presentacion"},
+  {titulo:"Mirar el barrio",autores:"Mateo G. y Julia C.",anio:"2025",carrera:"Profesorado en Educación Primaria",tipo:"video"},
+  {titulo:"Docentes que investigan",autores:"Grupo 1",anio:"2025",carrera:"Ciencias de la Educación",tipo:"podcast"},
+  {titulo:"Lectura y desigualdad",autores:"Valentina D.",anio:"2025",carrera:"Ciencias de la Educación",tipo:"presentacion"}
+];
+var TIPOS = {video:"Video",podcast:"Podcast",presentacion:"Presentación",otro:"Otro"};
+var CHIPS = {todos:"Todos",video:"Videos",podcast:"Podcasts",presentacion:"Presentaciones",otro:"Otros"};
+var ICONOS = {
+  video:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+  podcast:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  presentacion:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>',
+  otro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg>'
+};
+var FONDOS = {video:"#2f1659",podcast:"#174a47",presentacion:"#5a1f45",otro:"#33324d"};
+var datos = [], f = {tipo:"todos",anio:"",carrera:"",q:""};
+var $ = function (id) { return document.getElementById(id); };
+function norm(s) { return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim(); }
+
+function csv(t) {
+  var r=[],fl="",row=[],q=false,i,c;
+  for (i=0;i<t.length;i++) { c=t[i];
+    if (q) { if (c==='"') { if (t[i+1]==='"') { fl+='"'; i++; } else q=false; } else fl+=c; }
+    else if (c==='"') q=true;
+    else if (c===",") { row.push(fl); fl=""; }
+    else if (c==="\n"||c==="\r") { if (c==="\r"&&t[i+1]==="\n") i++; row.push(fl); r.push(row); row=[]; fl=""; }
+    else fl+=c; }
+  if (fl!==""||row.length) { row.push(fl); r.push(row); }
+  return r;
+}
+function tipoDe(s) {
+  s = norm(s);
+  if (s.indexOf("video")>-1) return "video";
+  if (s.indexOf("podcast")>-1||s.indexOf("audio")>-1) return "podcast";
+  if (s.indexOf("present")>-1||s.indexOf("ppt")>-1||s.indexOf("slides")>-1) return "presentacion";
+  return "otro";
+}
+function leer(texto) {
+  var filas = csv(texto).filter(function (r) { return r.join("").trim()!==""; });
+  if (!filas.length) return [];
+  var h = filas[0].map(norm), ix = function (n) { return h.indexOf(n); };
+  var col = {titulo:ix("titulo"),autores:ix("autores"),anio:ix("anio")>-1?ix("anio"):ix("ano"),carrera:ix("carrera"),tipo:ix("tipo"),
+    link:ix("link")>-1?ix("link"):ix("enlace"),aut:ix("autorizado"),desc:ix("descripcion"),portada:ix("portada")};
+  var si = ["si","s","x","true","1","yes","ok"];
+  return filas.slice(1).map(function (r) {
+    var g = function (k) { return col[k]>-1 ? (r[col[k]]||"").trim() : ""; };
+    return {titulo:g("titulo"),autores:g("autores"),anio:g("anio"),carrera:g("carrera"),tipo:tipoDe(g("tipo")),link:g("link"),
+      desc:g("desc"),portada:g("portada"),ok:col.aut<0 || si.indexOf(norm(g("aut")))>-1};
+  }).filter(function (d) { return d.titulo && d.ok; });
+}
+
+function chips() {
+  var box = $("chips"); box.innerHTML = "";
+  Object.keys(CHIPS).forEach(function (k) {
+    var n = k==="todos" ? datos.length : datos.filter(function (d) { return d.tipo===k; }).length;
+    if (k!=="todos" && !n) return;
+    var b = document.createElement("button"); b.type="button"; b.className="chip"; b.setAttribute("aria-pressed", String(f.tipo===k));
+    b.innerHTML = CHIPS[k]+"<small>"+n+"</small>";
+    b.onclick = function () { f.tipo=k; chips(); pintar(); };
+    box.appendChild(b);
+  });
+}
+function opciones(sel, valores, todas) {
+  sel.innerHTML = ""; var o = document.createElement("option"); o.value=""; o.textContent=todas; sel.appendChild(o);
+  valores.forEach(function (v) { var p=document.createElement("option"); p.value=v; p.textContent=v; sel.appendChild(p); });
+}
+function unicos(k) { return datos.map(function (d) { return d[k]; }).filter(function (v,i,a) { return v && a.indexOf(v)===i; }); }
+
+function pintar() {
+  var q = norm(f.q);
+  var lista = datos.filter(function (d) {
+    return (f.tipo==="todos"||d.tipo===f.tipo) && (!f.anio||d.anio===f.anio) && (!f.carrera||d.carrera===f.carrera) &&
+      (!q || norm(d.titulo+" "+d.autores).indexOf(q)>-1);
+  });
+  $("cuenta").textContent = lista.length===1 ? "1 trabajo" : lista.length+" trabajos";
+  var g = $("grilla"); g.innerHTML = "";
+  if (!lista.length) { g.innerHTML = '<p class="vacio">No hay trabajos con esos filtros. Probá con otro año o tipo.</p>'; return; }
+  lista.forEach(function (d) {
+    var b = document.createElement("button"); b.type="button"; b.className="tarjeta";
+    var p = document.createElement("div"); p.className="portada"; p.style.background = FONDOS[d.tipo];
+    if (d.portada && /^https?:/i.test(d.portada)) { p.className+=" con-imagen"; p.style.backgroundImage='url("'+d.portada.replace(/"/g,"%22")+'")'; p.style.backgroundSize="cover"; }
+    p.innerHTML = ICONOS[d.tipo];
+    var s = document.createElement("span"); s.className="insignia"; s.textContent=TIPOS[d.tipo]; p.appendChild(s);
+    var i = document.createElement("div"); i.className="info";
+    var h = document.createElement("h2"); h.textContent=d.titulo;
+    var m = document.createElement("p"); m.textContent=[d.autores,d.anio].filter(Boolean).join(" · ");
+    i.appendChild(h); i.appendChild(m); b.appendChild(p); b.appendChild(i);
+    b.onclick = function () { abrir(d); };
+    g.appendChild(b);
+  });
+}
+
+/* visor: convierte el link en un reproductor o visor embebido */
+function medio(d) {
+  var w = document.createElement("div"), u, src = null, alto = null, m, id;
+  try { u = new URL(d.link, location.href); } catch (e) { u = null; }
+  if (u && /^https?:$/.test(u.protocol)) {
+    var h = u.hostname.replace(/^www\./,""), p = u.pathname;
+    if (h==="youtu.be") id = p.slice(1);
+    else if (/(^|\.)youtube\.com$/.test(h)) id = u.searchParams.get("v") || ((p.match(/^\/(?:shorts|embed)\/([\w-]+)/)||[])[1]);
+    if (id && /^[\w-]+$/.test(id)) src = "https://www.youtube-nocookie.com/embed/"+id;
+    else if (h==="drive.google.com") { id = (p.match(/\/file\/d\/([\w-]+)/)||[])[1] || u.searchParams.get("id"); if (id && /^[\w-]+$/.test(id)) src = "https://drive.google.com/file/d/"+id+"/preview"; }
+    else if (h==="docs.google.com" && (m = p.match(/^\/(presentation|document|spreadsheets)\/d\/([\w-]+)/))) src = "https://docs.google.com/"+m[1]+"/d/"+m[2]+(m[1]==="presentation"?"/embed":"/preview");
+    else if (h==="open.spotify.com" && (m = p.match(/^\/(episode|show)\/(\w+)/))) { src = "https://open.spotify.com/embed/"+m[1]+"/"+m[2]; alto = "232px"; }
+    else if (/\.(mp3|m4a|wav|ogg)$/i.test(p)) { w.className="medio audio"; var a=document.createElement("audio"); a.controls=true; a.src=u.href; w.appendChild(a); return w; }
+    else if (/\.(mp4|webm)$/i.test(p)) { w.className="medio"; var v=document.createElement("video"); v.controls=true; v.src=u.href; w.appendChild(v); return w; }
+    else if (/\.(pptx?|docx?)$/i.test(p)) src = "https://view.officeapps.live.com/op/embed.aspx?src="+encodeURIComponent(u.href);
+    else if (/\.pdf$/i.test(p)) src = u.href;
+  }
+  if (src) {
+    w.className="medio"; if (alto) { w.style.aspectRatio="auto"; w.style.height=alto; }
+    var fr=document.createElement("iframe"); fr.src=src; fr.title=d.titulo; fr.allowFullscreen=true;
+    fr.setAttribute("allow","autoplay; encrypted-media; fullscreen"); fr.loading="lazy"; w.appendChild(fr); return w;
+  }
+  w.className="medio sin";
+  w.textContent = d.link ? "Este trabajo se abre en otra pestaña." : "Ejemplo: acá se va a mostrar el video, podcast o presentación.";
+  return w;
+}
+var visor = $("visor"), musicaEstabaSonando = false;
+function abrir(d) {
+  $("vTipo").textContent = TIPOS[d.tipo]; $("vTitulo").textContent = d.titulo;
+  $("vMeta").textContent = [d.autores,d.anio,d.carrera].filter(Boolean).join(" · ");
+  var box = $("vMedio"); box.innerHTML = ""; box.appendChild(medio(d));
+  $("vDesc").textContent = d.desc || ""; $("vDesc").style.display = d.desc ? "block" : "none";
+  var ab = $("vAbrir"); if (d.link && /^https?:/i.test(d.link)) { ab.href = d.link; ab.style.display = "inline"; } else ab.style.display = "none";
+  var au = $("musicaFondo"); musicaEstabaSonando = !au.paused; if (musicaEstabaSonando) { au.pause(); actualizarBoton(); }
+  visor.showModal(); $("cerrar").focus();
+}
+$("cerrar").onclick = function () { visor.close(); };
+visor.addEventListener("click", function (e) { if (e.target===visor) visor.close(); });
+visor.addEventListener("close", function () {
+  $("vMedio").innerHTML = "";
+  if (musicaEstabaSonando && !silenciada) $("musicaFondo").play().then(actualizarBoton, actualizarBoton);
+});
+
+/* arranque */
+function iniciar(lista, ejemplo) {
+  datos = lista;
+  if (ejemplo) $("aviso").innerHTML = '<p class="aviso">Estás viendo trabajos de ejemplo. Cuando conectes tu planilla de Google Sheets, acá van a aparecer los reales.</p>';
+  opciones($("anio"), unicos("anio").sort().reverse(), "Todos los años");
+  opciones($("carrera"), unicos("carrera").sort(), "Todas las carreras");
+  chips(); pintar();
+}
+$("buscar").oninput = function () { f.q = this.value; pintar(); };
+$("anio").onchange = function () { f.anio = this.value; pintar(); };
+$("carrera").onchange = function () { f.carrera = this.value; pintar(); };
+if (HOJA_CSV) {
+  $("cuenta").textContent = "Cargando trabajos…";
+  fetch(HOJA_CSV).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (t) { iniciar(leer(t), false); })
+    .catch(function () { $("cuenta").textContent = ""; $("grilla").innerHTML = '<p class="vacio">No pudimos cargar los trabajos. Revisá tu conexión e intentá de nuevo.</p>'; });
+} else iniciar(EJEMPLOS.map(function (e) { e.ok = true; return e; }), true);
+
+/* fondo animado suave */
+(function () {
+  var c=$("c"), g=c.getContext("2d"), w, h, px=.5, py=.5, tx=.5, ty=.5, reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function size() { var d=Math.min(devicePixelRatio||1,2); w=innerWidth; h=innerHeight; c.width=w*d; c.height=h*d; g.setTransform(d,0,0,d,0,0); if (reduce) draw(0); }
+  addEventListener("resize", size); addEventListener("pointermove", function (e) { tx=e.clientX/w; ty=e.clientY/h; });
+  function draw(t) {
+    px+=(tx-px)*.05; py+=(ty-py)*.05; g.clearRect(0,0,w,h);
+    for (var i=0;i<11;i++) { var base=h*(.06+.9*i/10); g.beginPath();
+      for (var X=0;X<=w;X+=8) { var u=X/w, y=base+Math.sin(u*4+t*.0005+i*.5)*12+Math.sin(u*9-t*.0008+i)*5,
+        d=(u-px)*(u-px)+(base/h-py)*(base/h-py); y-=Math.exp(-d*30)*30*Math.sin(t*.0018+i); X?g.lineTo(X,y):g.moveTo(X,y); }
+      g.strokeStyle=i===6?"rgba(111,242,197,.45)":"rgba(255,246,230,"+(.05+.06*Math.pow(Math.sin(i),2))+")"; g.lineWidth=1; g.stroke(); }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  size(); if (!reduce) requestAnimationFrame(draw);
+})();
+
+/* música de fondo */
+var silenciada = localStorage.getItem("musicaSilenciada")==="1", audioFondo = $("musicaFondo"), botonMusica = $("botonMusica");
+audioFondo.volume = .35;
+function actualizarBoton() { botonMusica.textContent = (silenciada||audioFondo.paused) ? "🔇 Música" : "🔊 Música"; }
+function intentar() { if (silenciada) return; audioFondo.play().then(function () { ["click","touchstart","keydown"].forEach(function (e) { document.removeEventListener(e, intentar); }); actualizarBoton(); }).catch(function () {}); }
+botonMusica.addEventListener("click", function (ev) {
+  ev.stopPropagation(); silenciada = !silenciada; localStorage.setItem("musicaSilenciada", silenciada?"1":"0");
+  if (silenciada) audioFondo.pause(); else audioFondo.play().catch(function () {}); actualizarBoton();
+});
+["click","touchstart","keydown"].forEach(function (e) { document.addEventListener(e, intentar); });
+actualizarBoton(); intentar();
+</script>
+</body>
+</html>
